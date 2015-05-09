@@ -1,10 +1,12 @@
 # Contact Handshake
 
+_Hackathon version_ highly unstable release of the hackathon result.
+
 An Android app to exchange contact information using NFC.
 Using the app strongly encourages you to send a vCard in both directions,
 rather than using Android Beam to share one contact at a time.
 
-<!-- MarkdownTOC -->
+<!-- MarkdownTOC autolink=true bracket=round depth=2 -->
 
 - [Different app-flows](#different-app-flows)
 - [Data formats](#data-formats)
