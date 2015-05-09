@@ -1,4 +1,4 @@
-package nl.openhack.mutualcontactexchange;
+package nl.openhack.contacthandshake;
 
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;

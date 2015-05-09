@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nl.openhack.mutualcontactexchange" >
+    package="nl.openhack.contacthandshake" >
 
     <uses-permission android:name="android.permission.NFC" />
 
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".HomePage"
+            android:name="nl.openhack.contacthandshake.HomePage"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,11 +22,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SendCardDialog"
+            android:name="nl.openhack.contacthandshake.SendCardDialog"
             android:label="@string/title_activity_send_card_dialog" >
         </activity>
         <activity
-            android:name=".IncomingHandshakeRequest"
+            android:name="nl.openhack.contacthandshake.IncomingHandshakeRequest"
             android:label="@string/title_activity_incoming_handshake_request" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
