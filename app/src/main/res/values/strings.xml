@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Contact Handshake</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_send_card_dialog">Send your Card</string>
+    <string name="title_activity_incoming_handshake_request">Incoming Handshake</string>
+</resources>
