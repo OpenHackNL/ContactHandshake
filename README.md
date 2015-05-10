@@ -9,7 +9,9 @@ rather than using Android Beam to share one contact at a time.
 <!-- MarkdownTOC autolink=true bracket=round depth=2 -->
 
 - [Different app-flows](#different-app-flows)
-- [Data formats](#data-formats)
+    - [Data formats](#data-formats)
+- [Icon credits](#icon-credits)
+- [TODO](#todo)
 
 <!-- /MarkdownTOC -->
 
@@ -54,16 +56,41 @@ rather than using Android Beam to share one contact at a time.
 
 ## Data formats
 
-### text/x-handshake-request
+### NDEF message for initiation
 
-This mime-type is used to trigger a handshake.
+An NDEF message to initiate a handshake has 3 records.
+
+1. A text/x-handshake-request record (see next chapter).
+2. A text/x-vcard record (the actual contact info).
+3. An external record (allows installing of the app).
+
+### The text/x-handshake-request MIME-type
+
+This MIME-type is used to initialize a handshake.
+It's body is encoded similar to POST data or a query string.
+
 It can be used in two ways:
 
-1. Empty body, forces an NFC/Offline reply.
-2. URL-encoded information will provide instructions on how to send a response through an online service that will act as the message broker.
+1. direct mode, forces an NFC/Offline reply.
+2. online mode, the option to use an online service that will act as the message broker will be described.
+
+For option 1, the fields are:
+
+- **direct** - This is a boolean field and must be set to 1.
 
 For option 2, the fields are:
 
 - **broker_post_url** - HTTP(S) URL where to send the response.
 - **sender_id** - An ID for the broker online service to know who to forward the message to.
 - **transaction_key** - A (random) key for the sender to verify the response received from the broker.
+
+# Icon credits
+
+https://www.iconfinder.com/icons/309089/book_communication_connection_contact_contacts_icon#size=512
+https://www.iconfinder.com/icons/386290/agreement_business_contract_deal_friend_hands_handshake_hello_social_icon#size=512
+
+# TODO
+
+- Store handshake vCard in contact list.
+- Store reference to contact in DB, to have a history of added "..." 3 days ago.
+- Receive response vCard.
