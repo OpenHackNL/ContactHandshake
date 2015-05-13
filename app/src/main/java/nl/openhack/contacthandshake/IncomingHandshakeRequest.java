@@ -2,7 +2,6 @@ package nl.openhack.contacthandshake;
 
 import android.content.Intent;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
@@ -10,13 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
 import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
-
 import ezvcard.VCard;
-import ezvcard.property.Telephone;
-import ezvcard.property.VCardProperty;
 
 
 public class IncomingHandshakeRequest extends ActionBarActivity {
@@ -40,8 +34,7 @@ public class IncomingHandshakeRequest extends ActionBarActivity {
                     try {
                         NdefHandshakeMessage handshakeMessage = NdefHandshakeMessage.createFromNdefMessage(msgs[i]);
                         vcardName.setText(handshakeMessage.getVCard().getFormattedName().getValue());
-
-                        String summary = summarizeVCard(handshakeMessage.getVCard());
+                        String summary = handshakeMessage.isDirect() ? "Response: direct mode" : "Response: direct mode, online mode";
                         vcardSummary.setText(summary);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -49,20 +42,6 @@ public class IncomingHandshakeRequest extends ActionBarActivity {
                 }
             }
         }
-    }
-
-    private String summarizeVCard(VCard vCard){
-        String summary = "";
-
-        if(!vCard.getTelephoneNumbers().isEmpty()){
-            summary += "Phone, ";
-        }
-
-        if(!vCard.getEmails().isEmpty()){
-            summary += "E-mail, ";
-        }
-
-        return summary;
     }
 
     @Override

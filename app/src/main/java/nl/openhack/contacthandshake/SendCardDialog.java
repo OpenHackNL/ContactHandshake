@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 
@@ -19,14 +20,14 @@ public class SendCardDialog extends ActionBarActivity implements
 
     NfcAdapter mNfcAdapter;
 
-    public static String VCARD = "BEGIN:VCARD\n" +
+    public static final String VCARD = "BEGIN:VCARD\n" +
             "VERSION:2.1\n" +
             "N:van Boven;Robin;;;\n" +
             "FN:Robin van Boven\n" +
             "TEL;CELL:+31682057903\n" +
             "EMAIL;WORK:info@robin-it.com\n" +
             "URL:robin-it.com\n" +
-            "END:VCARD\n"; // Not final because it can change during runtime.
+            "END:VCARD\n";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,6 @@ public class SendCardDialog extends ActionBarActivity implements
 
         // Register callback to listen for message-sent success
         mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
-
     }
 
 
@@ -69,28 +69,13 @@ public class SendCardDialog extends ActionBarActivity implements
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        return new NdefMessage(new NdefRecord[] { getContactRecord() });
-    }
-
-    /**
-     * Generates an NdefRecord corresponding to the current contact, as defined in
-     * the Beam.VCARD static variable.
-     * @return NdefRecord containing the contact info to beam
-     */
-    private NdefRecord getContactRecord()
-    {
-        if (VCARD.isEmpty())  // If no contact is set...
-        {
-            // Send an "empty" contact (vcard).
-            // On receiving device, user will be prompted create a new contact.
-            return null;
+        NdefHandshakeMessage handshakeMessage = NdefHandshakeMessage.createDirectHandshake(VCARD);
+        try {
+            return handshakeMessage.toNdefMessage();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        else  // Send the set contact.
-        {
-            byte[] payload = VCARD.getBytes(Charset.forName("UTF-8"));
-            NdefRecord nfcRecord = NdefRecord.createMime("text/vcard", payload);
-            return nfcRecord;
-        }
+        return null;
     }
 
     @Override

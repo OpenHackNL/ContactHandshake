@@ -13,6 +13,10 @@ import ezvcard.VCard;
  */
 public class NdefHandshakeMessage {
 
+    public static final String HANDSHAKE_MIME = "text/x-handshake-request";
+    public static final String VCARD_MIME = "text/x-vcard";
+    public static final String MAGIC_URI_PREFIX = "?";
+
     public static NdefHandshakeMessage createDirectHandshake(String rawVCard){
         return new NdefHandshakeMessage(rawVCard);
     }
@@ -24,20 +28,21 @@ public class NdefHandshakeMessage {
 
     public static NdefHandshakeMessage createFromNdefMessage(NdefMessage input)
             throws UnsupportedEncodingException, IllegalArgumentException {
+
         NdefRecord[] records = input.getRecords();
         NdefRecord record;
 
         //Record one: text/x-handshake-request
         record = records[0];
-        if(!record.toMimeType().equals("text/x-handshake-request")){
-            throw new IllegalArgumentException("First record of handshake message must be of MIME: text/x-handshake-request.");
+        if(!record.toMimeType().equals(HANDSHAKE_MIME)){
+            throw new IllegalArgumentException("First record of handshake message must be of MIME: "+HANDSHAKE_MIME+".");
         }
 
         //Parse it's information.
         String brokerPostUrl = null;
         String senderId = null;
         String transactionKey = null;
-        Uri decoded = Uri.parse(new String(record.getPayload(), "UTF-8"));
+        Uri decoded = Uri.parse(MAGIC_URI_PREFIX+new String(record.getPayload(), "UTF-8"));
         Boolean isDirect = decoded.getBooleanQueryParameter("direct", false);
         if(!isDirect){
             brokerPostUrl = decoded.getQueryParameter("broker_post_url");
@@ -64,28 +69,20 @@ public class NdefHandshakeMessage {
     protected Boolean isDirect;
     protected String rawVCard;
 
-    public String getBrokerPostUrl() {
-        return brokerPostUrl;
-    }
+    public String getBrokerPostUrl() { return this.brokerPostUrl; }
 
-    public String getSenderId() {
-        return senderId;
-    }
+    public String getSenderId() { return this.senderId; }
 
-    public String getTransactionKey() {
-        return transactionKey;
-    }
+    public String getTransactionKey() { return this.transactionKey; }
 
-    public Boolean isDirect() {
-        return isDirect;
-    }
+    public Boolean isDirect() { return this.isDirect; }
 
     public String getRawVCard() {
-        return rawVCard;
+        return this.rawVCard;
     }
 
     public VCard getVCard(){
-        return Ezvcard.parse(rawVCard).first();
+        return Ezvcard.parse(this.rawVCard).first();
     }
 
     protected NdefHandshakeMessage(String rawVCard){
@@ -99,6 +96,27 @@ public class NdefHandshakeMessage {
         this.transactionKey = transactionKey;
         this.rawVCard = rawVCard;
         this.isDirect = false;
+    }
+
+    public String buildHandshakeBody(){
+        Uri.Builder handshakeBody = new Uri.Builder();
+        if(this.isDirect){
+            handshakeBody.appendQueryParameter("direct", "1");
+        }
+        else{
+            handshakeBody.appendQueryParameter("broker_post_url", this.brokerPostUrl);
+            handshakeBody.appendQueryParameter("sender_id", this.senderId);
+            handshakeBody.appendQueryParameter("transaction_key", this.transactionKey);
+        }
+        return handshakeBody.build().toString().substring(MAGIC_URI_PREFIX.length());
+    }
+
+    public NdefMessage toNdefMessage() throws UnsupportedEncodingException {
+        return new NdefMessage(
+                NdefRecord.createMime(HANDSHAKE_MIME, this.buildHandshakeBody().getBytes("UTF-8")),
+                NdefRecord.createMime(VCARD_MIME, this.rawVCard.getBytes("UTF-8")),
+                NdefRecord.createApplicationRecord(this.getClass().getPackage().getName())
+        );
     }
 
 }
