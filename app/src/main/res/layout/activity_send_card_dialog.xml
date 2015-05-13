@@ -1,5 +1,5 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
-    android:name="nl.openhack.mutualcontactexchange.SendCardDialogFragment"
+    android:name="nl.openhack.contacthandshake.SendCardDialogFragment"
     tools:layout="@layout/fragment_send_card_dialog" android:layout_width="match_parent"
     android:layout_height="match_parent" />

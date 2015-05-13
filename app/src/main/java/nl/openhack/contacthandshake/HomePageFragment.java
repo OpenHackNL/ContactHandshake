@@ -1,4 +1,4 @@
-package nl.openhack.mutualcontactexchange;
+package nl.openhack.contacthandshake;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
