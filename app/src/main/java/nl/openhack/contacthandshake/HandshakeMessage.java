@@ -11,22 +11,22 @@ import ezvcard.VCard;
 /**
  * Created by beanow on 09/05/15.
  */
-public class NdefHandshakeMessage {
+public class HandshakeMessage {
 
     public static final String HANDSHAKE_MIME = "text/x-handshake-request";
     public static final String VCARD_MIME = "text/x-vcard";
     public static final String MAGIC_URI_PREFIX = "?";
 
-    public static NdefHandshakeMessage createDirectHandshake(String rawVCard){
-        return new NdefHandshakeMessage(rawVCard);
+    public static HandshakeMessage createDirectHandshake(String rawVCard){
+        return new HandshakeMessage(rawVCard);
     }
 
-    public static NdefHandshakeMessage createOnlineHandshake(String brokerPostUrl, String senderId, String transactionKey, String rawVCard){
+    public static HandshakeMessage createOnlineHandshake(String brokerPostUrl, String senderId, String transactionKey, String rawVCard){
         //TODO: verify format of these inputs.
-        return new NdefHandshakeMessage(brokerPostUrl, senderId, transactionKey, rawVCard);
+        return new HandshakeMessage(brokerPostUrl, senderId, transactionKey, rawVCard);
     }
 
-    public static NdefHandshakeMessage createFromNdefMessage(NdefMessage input)
+    public static HandshakeMessage createFromNdefMessage(NdefMessage input)
             throws UnsupportedEncodingException, IllegalArgumentException {
 
         NdefRecord[] records = input.getRecords();
@@ -55,10 +55,10 @@ public class NdefHandshakeMessage {
         String rawVCard = new String(record.getPayload(), "UTF-8");
 
         if(isDirect){
-            return NdefHandshakeMessage.createDirectHandshake(rawVCard);
+            return HandshakeMessage.createDirectHandshake(rawVCard);
         }
         else{
-            return NdefHandshakeMessage.createOnlineHandshake(brokerPostUrl, senderId, transactionKey, rawVCard);
+            return HandshakeMessage.createOnlineHandshake(brokerPostUrl, senderId, transactionKey, rawVCard);
         }
 
     }
@@ -85,12 +85,12 @@ public class NdefHandshakeMessage {
         return Ezvcard.parse(this.rawVCard).first();
     }
 
-    protected NdefHandshakeMessage(String rawVCard){
+    protected HandshakeMessage(String rawVCard){
         this.rawVCard = rawVCard;
         this.isDirect = true;
     }
 
-    protected NdefHandshakeMessage(String brokerPostUrl, String senderId, String transactionKey, String rawVCard){
+    protected HandshakeMessage(String brokerPostUrl, String senderId, String transactionKey, String rawVCard){
         this.brokerPostUrl = brokerPostUrl;
         this.senderId = senderId;
         this.transactionKey = transactionKey;

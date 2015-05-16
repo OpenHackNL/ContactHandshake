@@ -14,19 +14,20 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="nl.openhack.contacthandshake.HomePage"
+            android:name=".HomePage"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="nl.openhack.contacthandshake.SendCardDialog"
+            android:name=".SendHandshakeDialog"
             android:label="@string/title_activity_send_card_dialog" >
         </activity>
         <activity
-            android:name="nl.openhack.contacthandshake.IncomingHandshakeRequest"
+            android:name=".IncomingHandshakeRequest"
             android:label="@string/title_activity_incoming_handshake_request" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -35,7 +36,21 @@
 
                 <data android:mimeType="text/x-handshake-request" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".IncomingHandshakeResponse"
+            android:label="@string/title_activity_incoming_handshake_response" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/x-handshake-response" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".WaitingForResponse"
+            android:label="@string/title_activity_waiting_for_response" >
         </activity>
     </application>
 

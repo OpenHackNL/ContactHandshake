@@ -9,10 +9,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import java.io.UnsupportedEncodingException;
 
 
-public class IncomingHandshakeRequest extends ActionBarActivity {
+public class IncomingHandshakeResponse extends ActionBarActivity {
 
     NdefMessage[] msgs;
     Intent intent;
@@ -23,18 +24,15 @@ public class IncomingHandshakeRequest extends ActionBarActivity {
         super.onResume();
         intent = getIntent();
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            vcardName = (TextView)findViewById(R.id.textView6);
-            vcardSummary = (TextView)findViewById(R.id.textView7);
             Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             if (rawMsgs != null) {
                 msgs = new NdefMessage[rawMsgs.length];
                 for (int i = 0; i < rawMsgs.length; i++) {
                     msgs[i] = (NdefMessage) rawMsgs[i];
                     try {
-                        HandshakeMessage handshakeMessage = HandshakeMessage.createFromNdefMessage(msgs[i]);
-                        vcardName.setText(handshakeMessage.getVCard().getFormattedName().getValue());
-                        String summary = handshakeMessage.isDirect() ? "Response: direct mode" : "Response: direct mode, online mode";
-                        vcardSummary.setText(summary);
+                        ResponseMessage responseMessage = ResponseMessage.createFromNdefMessage(msgs[i]);
+                        vcardName.setText(responseMessage.getVCard().getFormattedName().getValue());
+                        vcardSummary.setText("Handshake completed");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -46,14 +44,16 @@ public class IncomingHandshakeRequest extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_incoming_handshake_request);
+        setContentView(R.layout.activity_incoming_handshake_response);
+        vcardName = (TextView)findViewById(R.id.textView9);
+        vcardSummary = (TextView)findViewById(R.id.textView10);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_incomming_handshake_request, menu);
+        getMenuInflater().inflate(R.menu.menu_incoming_handshake_response, menu);
         return true;
     }
 
@@ -71,5 +71,4 @@ public class IncomingHandshakeRequest extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
